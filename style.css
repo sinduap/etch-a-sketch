@@ -65,6 +65,15 @@ h1 {
   color: var(--white-2);
 }
 
+.selected--rainbow {
+  background: linear-gradient(
+    90deg,
+    rgba(235, 125, 156, 1) 0%,
+    rgba(135, 232, 150, 1) 50%,
+    rgba(105, 132, 233, 1) 100%
+  );
+}
+
 button {
   border: none;
   padding: 8px 16px;

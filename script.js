@@ -5,9 +5,10 @@ const WHITE = '#fff';
 const grid = document.querySelector('.grid');
 const setGridBtn = document.querySelector('.config__grid');
 const eraseBtn = document.querySelector('.config__erase');
+const rainbowBtn = document.querySelector('.config__rainbow');
 
 let isActive = false;
-let activeColor = INITIAL_COLOR;
+let mode = 'default';
 
 window.addEventListener('mousedown', function () {
   isActive = true;
@@ -29,17 +30,37 @@ setGridBtn.addEventListener('click', function () {
 });
 
 eraseBtn.addEventListener('click', function () {
+  rainbowBtn.classList.remove('selected--rainbow');
   if (this.classList.contains('selected')) {
-    activeColor = INITIAL_COLOR;
+    mode = 'default';
   } else {
-    activeColor = WHITE;
+    mode = 'erase';
   }
   this.classList.toggle('selected');
 });
 
+rainbowBtn.addEventListener('click', function () {
+  eraseBtn.classList.remove('selected');
+  if (this.classList.contains('selected--rainbow')) {
+    mode = 'default';
+  } else {
+    mode = 'rainbow';
+  }
+  this.classList.toggle('selected--rainbow');
+});
+
 function handleSketch(e) {
   if (e.type === 'mouseover' && !isActive) return;
-  e.target.style.backgroundColor = activeColor;
+  switch (mode) {
+    case 'default':
+      e.target.style.backgroundColor = INITIAL_COLOR;
+      break;
+    case 'erase':
+      e.target.style.backgroundColor = WHITE;
+      break;
+    case 'rainbow':
+      e.target.style.backgroundColor = createRandomColor();
+  }
 }
 
 function createGrid(gridCount = DEFAULT_GRID_COUNT) {
@@ -54,3 +75,13 @@ function createGrid(gridCount = DEFAULT_GRID_COUNT) {
     grid.append(child);
   }
 }
+
+// Helpers
+const randomBetween = (min, max) =>
+  min + Math.floor(Math.random() * (max - min + 1));
+
+const createRandomColor = () =>
+  `rgb(${randomBetween(0, 255)},${randomBetween(0, 255)},${randomBetween(
+    0,
+    255
+  )})`;
