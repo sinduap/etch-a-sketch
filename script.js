@@ -4,6 +4,7 @@ const WHITE = '#fff';
 
 const grid = document.querySelector('.grid');
 const setGridBtn = document.querySelector('.config__grid');
+const eraseBtn = document.querySelector('.config__erase');
 
 let isActive = false;
 let activeColor = INITIAL_COLOR;
@@ -25,6 +26,15 @@ setGridBtn.addEventListener('click', function () {
   }
   grid.innerHTML = '';
   createGrid(gridCount);
+});
+
+eraseBtn.addEventListener('click', function () {
+  if (this.classList.contains('selected')) {
+    activeColor = INITIAL_COLOR;
+  } else {
+    activeColor = WHITE;
+  }
+  this.classList.toggle('selected');
 });
 
 function handleSketch(e) {
