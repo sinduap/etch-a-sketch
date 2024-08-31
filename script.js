@@ -1,14 +1,17 @@
-const DEFAULT_GRID_COUNT = 16;
-const INITIAL_COLOR = '#3a3a3a';
-const WHITE = '#fff';
+const DEFAULT_GRID = 16;
+const DEFAULT_COLOR = '#3a3a3a';
+const COLOR_WHITE = '#fff';
+const DEFAULT_MODE = 'DEFAULT';
+const RAINBOW_MODE = 'RAINBOW';
+const ERASE_MODE = 'ERASE';
 
 const grid = document.querySelector('.grid');
-const setGridBtn = document.querySelector('.config__grid');
+const createGridBtn = document.querySelector('.config__grid');
 const eraseBtn = document.querySelector('.config__erase');
 const rainbowBtn = document.querySelector('.config__rainbow');
 
 let isActive = false;
-let mode = 'default';
+let mode = DEFAULT_MODE;
 
 window.addEventListener('mousedown', function () {
   isActive = true;
@@ -18,8 +21,8 @@ window.addEventListener('mouseup', function () {
 });
 window.addEventListener('load', () => createGrid());
 
-setGridBtn.addEventListener('click', function () {
-  const gridCount = +prompt('How many grid', DEFAULT_GRID_COUNT);
+createGridBtn.addEventListener('click', function () {
+  const gridCount = +prompt('How many grid', DEFAULT_GRID);
   if (!gridCount) return;
   if (!Number.isInteger(gridCount) || gridCount < 1) {
     alert('Must be an integer');
@@ -32,9 +35,9 @@ setGridBtn.addEventListener('click', function () {
 eraseBtn.addEventListener('click', function () {
   rainbowBtn.classList.remove('selected--rainbow');
   if (this.classList.contains('selected')) {
-    mode = 'default';
+    mode = DEFAULT_MODE;
   } else {
-    mode = 'erase';
+    mode = ERASE_MODE;
   }
   this.classList.toggle('selected');
 });
@@ -42,9 +45,9 @@ eraseBtn.addEventListener('click', function () {
 rainbowBtn.addEventListener('click', function () {
   eraseBtn.classList.remove('selected');
   if (this.classList.contains('selected--rainbow')) {
-    mode = 'default';
+    mode = DEFAULT_MODE;
   } else {
-    mode = 'rainbow';
+    mode = RAINBOW_MODE;
   }
   this.classList.toggle('selected--rainbow');
 });
@@ -52,23 +55,25 @@ rainbowBtn.addEventListener('click', function () {
 function handleSketch(e) {
   if (e.type === 'mouseover' && !isActive) return;
   switch (mode) {
-    case 'default':
-      e.target.style.backgroundColor = INITIAL_COLOR;
+    case DEFAULT_MODE:
+      e.target.style.backgroundColor = DEFAULT_COLOR;
       break;
-    case 'erase':
-      e.target.style.backgroundColor = WHITE;
+    case ERASE_MODE:
+      e.target.style.backgroundColor = COLOR_WHITE;
       break;
-    case 'rainbow':
+    case RAINBOW_MODE:
       e.target.style.backgroundColor = createRandomColor();
+      break;
   }
 }
 
-function createGrid(gridCount = DEFAULT_GRID_COUNT) {
+function createGrid(gridSize = DEFAULT_GRID) {
   const cell = document.createElement('div');
   cell.classList.add('cell');
-  cell.style.height = `${grid.clientHeight / gridCount}px`;
-  cell.style.width = `${grid.clientWidth / gridCount}px`;
-  for (let i = 0; i < gridCount * gridCount; i++) {
+  cell.style.height = `${grid.clientHeight / gridSize}px`;
+  cell.style.width = `${grid.clientWidth / gridSize}px`;
+
+  for (let i = 0; i < gridSize * gridSize; i++) {
     const child = cell.cloneNode();
     child.addEventListener('mouseover', handleSketch);
     child.addEventListener('mousedown', handleSketch);
