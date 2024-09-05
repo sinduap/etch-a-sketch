@@ -1,4 +1,4 @@
-const DEFAULT_GRID = 16;
+const DEFAULT_GRID_SIZE = 16;
 const DEFAULT_COLOR = '#3a3a3a';
 const COLOR_WHITE = '#fff';
 const DEFAULT_MODE = 'DEFAULT';
@@ -7,56 +7,89 @@ const ERASE_MODE = 'ERASE';
 
 const grid = document.querySelector('.grid');
 const createGridBtn = document.querySelector('.config__grid');
-const eraseBtn = document.querySelector('.config__erase');
+const colorPicker = document.querySelector('.config__color-picker');
+const penBtn = document.querySelector('.config__pen');
 const rainbowBtn = document.querySelector('.config__rainbow');
+const eraseBtn = document.querySelector('.config__erase');
+const clearBtn = document.querySelector('.config__clear');
 
 let isActive = false;
 let mode = DEFAULT_MODE;
+let activeColor = DEFAULT_COLOR;
+let currentGridSize = DEFAULT_GRID_SIZE;
 
 window.addEventListener('mousedown', function () {
   isActive = true;
 });
+
 window.addEventListener('mouseup', function () {
   isActive = false;
 });
-window.addEventListener('load', () => createGrid());
+
+window.addEventListener('load', function () {
+  createGrid();
+  colorPicker.setAttribute('value', DEFAULT_COLOR);
+});
 
 createGridBtn.addEventListener('click', function () {
-  const gridCount = +prompt('How many grid', DEFAULT_GRID);
+  const gridCount = +prompt('Create how many grid?', DEFAULT_GRID_SIZE);
   if (!gridCount) return;
+  currentGridSize = gridCount;
   if (!Number.isInteger(gridCount) || gridCount < 1) {
-    alert('Must be an integer');
+    alert('Must be a positive integer');
     return;
   }
   grid.innerHTML = '';
   createGrid(gridCount);
 });
 
-eraseBtn.addEventListener('click', function () {
+colorPicker.addEventListener('input', function () {
+  activeColor = this.value;
+});
+
+penBtn.addEventListener('click', function () {
+  eraseBtn.classList.remove('selected');
   rainbowBtn.classList.remove('selected--rainbow');
-  if (this.classList.contains('selected')) {
-    mode = DEFAULT_MODE;
-  } else {
-    mode = ERASE_MODE;
-  }
-  this.classList.toggle('selected');
+  this.classList.add('selected');
+  mode = DEFAULT_MODE;
 });
 
 rainbowBtn.addEventListener('click', function () {
   eraseBtn.classList.remove('selected');
+  penBtn.classList.remove('selected');
   if (this.classList.contains('selected--rainbow')) {
     mode = DEFAULT_MODE;
+    penBtn.classList.add('selected');
   } else {
     mode = RAINBOW_MODE;
   }
   this.classList.toggle('selected--rainbow');
 });
 
+eraseBtn.addEventListener('click', function () {
+  rainbowBtn.classList.remove('selected--rainbow');
+  penBtn.classList.remove('selected');
+  if (this.classList.contains('selected')) {
+    mode = DEFAULT_MODE;
+    penBtn.classList.add('selected');
+  } else {
+    mode = ERASE_MODE;
+  }
+  this.classList.toggle('selected');
+});
+
+clearBtn.addEventListener('click', () => {
+  const answer = alert('Are you sure? (Press Esc to cancel)');
+  if (!answer) return;
+  grid.innerHTML = '';
+  createGrid(currentGridSize);
+});
+
 function handleSketch(e) {
   if (e.type === 'mouseover' && !isActive) return;
   switch (mode) {
     case DEFAULT_MODE:
-      e.target.style.backgroundColor = DEFAULT_COLOR;
+      e.target.style.backgroundColor = activeColor;
       break;
     case ERASE_MODE:
       e.target.style.backgroundColor = COLOR_WHITE;
@@ -67,7 +100,7 @@ function handleSketch(e) {
   }
 }
 
-function createGrid(gridSize = DEFAULT_GRID) {
+function createGrid(gridSize = DEFAULT_GRID_SIZE) {
   const cell = document.createElement('div');
   cell.classList.add('cell');
   cell.style.height = `${grid.clientHeight / gridSize}px`;
