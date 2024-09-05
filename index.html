@@ -10,15 +10,41 @@
       href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
       rel="stylesheet"
     />
+    <script
+      src="https://kit.fontawesome.com/a08978357f.js"
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
   </head>
   <body>
     <div class="container">
       <div class="config">
-        <button class="config__grid">New grid</button>
-        <button class="config__erase">Erase</button>
-        <button class="config__rainbow">Rainbow</button>
+        <button class="config__grid" title="create new">
+          <i class="fa-solid fa-square-plus"></i>
+        </button>
+        <label class="config__grid" title="change color">
+          <i class="fa-solid fa-palette"></i>
+          <input
+            type="color"
+            hidden
+            class="config__color-picker"
+            name="color"
+            id="color"
+          />
+        </label>
+        <button class="config__grid config__pen selected" title="pen">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="config__grid config__rainbow" title="rainbow pen">
+          <i class="fa-solid fa-rainbow"></i>
+        </button>
+        <button class="config__grid config__erase" title="eraser">
+          <i class="fa-solid fa-eraser"></i>
+        </button>
+        <button class="config__grid config__clear" title="clear">
+          <i class="fa-solid fa-trash"></i>
+        </button>
       </div>
       <div class="box">
         <h1>Etch a Sketch</h1>
