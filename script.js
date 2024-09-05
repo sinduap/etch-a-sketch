@@ -79,7 +79,7 @@ eraseBtn.addEventListener('click', function () {
 });
 
 clearBtn.addEventListener('click', () => {
-  const answer = alert('Are you sure? (Press Esc to cancel)');
+  const answer = confirm('Are you sure? (Press Esc to cancel)');
   if (!answer) return;
   grid.innerHTML = '';
   createGrid(currentGridSize);
